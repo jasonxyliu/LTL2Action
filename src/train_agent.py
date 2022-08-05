@@ -116,6 +116,7 @@ parser.add_argument("--int-reward", type=float, default=0.0, help="the intrinsic
 parser.add_argument("--pretrained-gnn", action="store_true", default=False, help="load a pre-trained LTL module.")
 parser.add_argument("--dumb-ac", action="store_true", default=False,help="Use a single-layer actor-critic")
 parser.add_argument("--freeze-ltl", action="store_true", default=False,help="Freeze the gradient updates of the LTL module")
+parser.add_argument("--cpu", action="store_true", default=False, help="use cpu for training.")
 
 args = parser.parse_args()
 
@@ -174,7 +175,10 @@ utils.seed(args.seed)
 
 # Set device
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if args.cpu:
+    device = torch.device("cpu")
+else:
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 txt_logger.info(f"Device: {device}\n")
 
 # Load environments
@@ -268,6 +272,9 @@ update = status["update"]
 start_time = time.time()
 
 while num_frames < args.frames:
+    print(f"training progress: {num_frames}/{args.frames}")
+    print(f"time took so far: {time.time() - start_time}")
+
     # Update model parameters
 
     update_start_time = time.time()
