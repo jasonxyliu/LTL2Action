@@ -3,9 +3,10 @@ from gym.envs.registration import register
 from envs.gym_letters.letter_env import LetterEnv
 from envs.gym_letters.simple_ltl_env import SimpleLTLEnv
 from envs.minigrid.minigrid_env import MinigridEnv
-from envs.safety.zones_env import ZonesEnv
+# from envs.safety.zones_env import ZonesEnv
 
-__all__ = ["LetterEnv", "SimpleLTLEnv", "MinigridEnv", "ZonesEnv"]
+# __all__ = ["LetterEnv", "SimpleLTLEnv", "MinigridEnv", "ZonesEnv"]
+__all__ = ["LetterEnv", "SimpleLTLEnv", "MinigridEnv"]
 
 
 ### Simple LTL Envs
