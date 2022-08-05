@@ -106,17 +106,17 @@ def _get_std_format(ltl_spot):
     s = ltl_spot[0]
     r = ltl_spot[1:]
 
-    if s in ["X","U","&","|"]:
+    if s in ["U","&","|"]:
         v1,r1 = _get_std_format(r)
         v2,r2 = _get_std_format(r1)
-        if s == "X": op = 'next'
         if s == "U": op = 'until'
         if s == "&": op = 'and'
         if s == "|": op = 'or'
         return (op,v1,v2),r2
 
-    if s in ["F","G","!"]:
+    if s in ["X","F","G","!"]:
         v1,r1 = _get_std_format(r)
+        if s == "X": op = 'next'
         if s == "F": op = 'eventually'
         if s == "G": op = 'always'
         if s == "!": op = 'not'
