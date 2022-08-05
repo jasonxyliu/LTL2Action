@@ -9,6 +9,23 @@ In the **animation** below, our agent's behaviour, compared to a myopic one is d
 <!--     <figcaption class="figure-caption text-center">Figure 1. (animation) Myopic agent vs. ours. </figcaption> -->
 </p>
 
+## New Installation instructions
+1. Create conda environment (only works for Python 3.6 or 3.7)
+    - `conda create -n ltl2action python=3.6`
+2. Install LTL2Action
+    - `git clone git@github.com:jasonxyliu/LTL2Action.git`
+    - `cd LTL2Action`
+    - `pip install -r requirements.txt`
+3. Install dependencies
+    - `conda install -c conda-forge spot`
+    - `conda install -c conda-forge dill`
+    - `pip install ring`
+4. (Optional) to run without MuJoCo installation, comment out ZonesEnv in the following files
+    - `envs/__init__.py`
+    - `utils/format.py`
+    - `env_models.py`
+
+
 ## Installation instructions
 
 
