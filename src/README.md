@@ -31,7 +31,7 @@ GNN: `train_agent.py --also ppo --env Zones-5-v0 --ltl-sampler Until_1_2_1_1 --f
 GNN+progression: `train_agent.py --algo ppo --env Adversarial-v0 --ltl-sampler Adversarial --frames-per-proc 1024  --discount 0.96 --log-interval 1 --save-interval 50 --frames 3000000`
 
 ### LTLBootcamp (pretraining)
-GNN+progression, Transfer Training Tasks, e.g. `--ltl_sampler {train or test}_{ltl_type}_{size}`, CPU: `python train_agent.py --algo ppo --env Simple-LTL-Env-v0 --log-interval 1 --save-interval 30 --frames-per-proc 512 --batch-size 1024 --frames 10000000 --dumb-ac --discount 0.9 --ltl-sampler Transfer_train_mixed_50 --lr 0.001 --clip-eps 0.1 --gae-lambda 0.5 --epochs 2 --cpu`
+GNN+progression, Transfer Training Tasks, e.g. `--ltl_sampler Transfer_{train or test}_{ltl_type}_{size}`, CPU: `python train_agent.py --algo ppo --env Simple-LTL-Env-v0 --log-interval 1 --save-interval 30 --frames-per-proc 512 --batch-size 1024 --frames 10000000 --dumb-ac --discount 0.9 --ltl-sampler Transfer_train_mixed_50 --lr 0.001 --clip-eps 0.1 --gae-lambda 0.5 --epochs 2 --cpu`
 
 GNN+progression (Avoidance Tasks): `train_agent.py --algo ppo --env Simple-LTL-Env-v0 --log-interval 1 --save-interval 30 --frames-per-proc 512 --batch-size 1024 --frames 10000000 --dumb-ac --discount 0.9 --ltl-sampler Eventually_1_5_1_4 --lr 0.001 --clip-eps 0.1 --gae-lambda 0.5 --epochs 2`
 
