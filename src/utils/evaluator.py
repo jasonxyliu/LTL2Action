@@ -146,7 +146,7 @@ if __name__ == '__main__':
 
     # pdb.set_trace()
 
-    average_discounted_return = utils.average_discounted_return(logs_returns_per_episode, logs_num_frames_per_episode, args.discount, include_error)
+    average_discounted_return = utils.average_discounted_return(logs_returns_per_episode, logs_num_frames_per_episode, args.discount)
     # average_discounted_return, error = utils.average_discounted_return(logs_returns_per_episode, logs_num_frames_per_episode, args.discount, include_error=True)
 
     header = ["frames"]
