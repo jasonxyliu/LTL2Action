@@ -143,14 +143,21 @@ if __name__ == '__main__':
     num_frame_pe = sum(logs_num_frames_per_episode)
     return_per_episode = utils.synthesize(logs_returns_per_episode)
     num_frames_per_episode = utils.synthesize(logs_num_frames_per_episode)
-    average_discounted_return, error = utils.average_discounted_return(logs_returns_per_episode, logs_num_frames_per_episode, args.discount, include_error=True)
+
+    # pdb.set_trace()
+
+    average_discounted_return = utils.average_discounted_return(logs_returns_per_episode, logs_num_frames_per_episode, args.discount, include_error)
+    # average_discounted_return, error = utils.average_discounted_return(logs_returns_per_episode, logs_num_frames_per_episode, args.discount, include_error=True)
 
     header = ["frames"]
     data   = [num_frame_pe]
     header += ["num_frames_" + key for key in num_frames_per_episode.keys()]
     data += num_frames_per_episode.values()
-    header += ["average_discounted_return", "err"]
-    data += [average_discounted_return, error]
+    header += ["average_discounted_return"]
+    data += [average_discounted_return]
+    # header += ["average_discounted_return", "err"]
+    # data += [average_discounted_return, error]
+
 
     header += ["return_" + key for key in return_per_episode.keys()]
     data += return_per_episode.values()
