@@ -1,7 +1,12 @@
+import os
 import time
 import torch
 from torch_ac.utils.penv import ParallelEnv
 #import tensorboardX
+
+import sys
+sys.path.append(".")
+import pdb
 
 import utils
 import argparse
@@ -46,11 +51,11 @@ class Eval:
 
 
 
-    def eval(self, num_frames, episodes=100, stdout=True):
+    def eval(self, num_frames, episodes=100, stdout=True, use_cpu=True):
         # Load agent
-            
-        agent = utils.Agent(self.eval_envs.envs[0], self.eval_envs.observation_space, self.eval_envs.action_space, self.model_dir + "/train", 
-            self.ignoreLTL, self.progression_mode, self.gnn, recurrence = self.recurrence, dumb_ac = self.dumb_ac, device=self.device, argmax=self.argmax, num_envs=self.num_procs)
+        agent = utils.Agent(self.eval_envs.envs[0], self.eval_envs.observation_space, self.eval_envs.action_space,
+        os.path.join(self.model_dir, "train"), self.ignoreLTL, self.progression_mode, self.gnn,
+        recurrence = self.recurrence, dumb_ac = self.dumb_ac, device=self.device, argmax=self.argmax, num_envs=self.num_procs)
 
 
         # Run agent
@@ -111,6 +116,8 @@ if __name__ == '__main__':
     parser.add_argument("--recurrence", type=int, default=1,
                     help="number of time-steps gradient is backpropagated (default: 1). If > 1, a LSTM is added to the model to have memory.")
     parser.add_argument("--gnn", default="RGCN_8x32_ROOT_SHARED", help="use gnn to model the LTL (only if ignoreLTL==True)")
+    parser.add_argument("--dumb-ac", action="store_true", default=False,help="Use a single-layer actor-critic")
+    parser.add_argument("--cpu", action="store_true", default=False, help="use cpu for training.")
 
 
     args = parser.parse_args()
@@ -124,8 +131,8 @@ if __name__ == '__main__':
 
         eval = utils.Eval(args.env, model_path, args.ltl_sampler,
                      seed=seed, device=torch.device("cpu"), argmax=False,
-                     num_procs=args.procs, ignoreLTL=args.ignoreLTL, progression_mode=args.progression_mode, gnn=args.gnn, recurrence=args.recurrence, dumb_ac=False, discount=args.discount)
-        rpe, nfpe = eval.eval(-1, episodes=args.eval_episodes, stdout=True)
+                     num_procs=args.procs, ignoreLTL=args.ignoreLTL, progression_mode=args.progression_mode, gnn=args.gnn, recurrence=args.recurrence, dumb_ac=args.dumb_ac, discount=args.discount)
+        rpe, nfpe = eval.eval(-1, episodes=args.eval_episodes, stdout=True, use_cpu=args.cpu)
         logs_returns_per_episode += rpe
         logs_num_frames_per_episode += nfpe 
 

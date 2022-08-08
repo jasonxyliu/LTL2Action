@@ -24,7 +24,7 @@ class TransferSampler():
 
     def sample(self):
         ret_formula = random.choice(self.formulas)
-        print(ret_formula)
+        # print(ret_formula)
         return ret_formula
 
 

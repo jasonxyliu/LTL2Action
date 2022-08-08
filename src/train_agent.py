@@ -35,14 +35,15 @@ import tensorboardX
 import sys
 import glob
 from math import floor
+import pdb
 
 import utils
 from model import ACModel
 from recurrent_model import RecurrentACModel
 from envs.gym_letters.letter_env import LetterEnv
 
-# Parse arguments
 
+# Parse arguments
 parser = argparse.ArgumentParser()
 
 ## General parameters
@@ -224,7 +225,11 @@ if use_mem:
     acmodel = RecurrentACModel(envs[0].env, obs_space, envs[0].action_space, args.ignoreLTL, args.gnn, args.dumb_ac, args.freeze_ltl)
 else:
     acmodel = ACModel(envs[0].env, obs_space, envs[0].action_space, args.ignoreLTL, args.gnn, args.dumb_ac, args.freeze_ltl)
+
+pdb.set_trace()
+
 if "model_state" in status:
+    print("train_agent.py load_state_dict")
     acmodel.load_state_dict(status["model_state"])
     txt_logger.info("Loading model from existing run.\n")
 

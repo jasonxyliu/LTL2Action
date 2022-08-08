@@ -12,7 +12,7 @@ class Agent:
     - to analyze the feedback (i.e. reward and done state) of its action."""
 
     def __init__(self, env, obs_space, action_space, model_dir, ignoreLTL, progression_mode,
-                gnn, recurrence = 1, dumb_ac = False, device=None, argmax=False, num_envs=1):
+                gnn, recurrence = 1, dumb_ac = False, device=None, argmax=False, num_envs=1, use_cpu=False):
         try:
             print(model_dir)
             status = utils.get_status(model_dir)
@@ -35,7 +35,7 @@ class Agent:
         self.argmax = argmax
         self.num_envs = num_envs
 
-        self.acmodel.load_state_dict(utils.get_model_state(model_dir))
+        self.acmodel.load_state_dict(utils.get_model_state(model_dir, use_cpu))
         self.acmodel.to(self.device)
         self.acmodel.eval()
 
