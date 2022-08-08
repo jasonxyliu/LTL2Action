@@ -1,4 +1,5 @@
 import os
+import json
 import time
 import torch
 from torch_ac.utils.penv import ParallelEnv
@@ -162,5 +163,20 @@ if __name__ == '__main__':
     header += ["return_" + key for key in return_per_episode.keys()]
     data += return_per_episode.values()
 
+    pdb.set_trace()
+
+    num_successes = len([elem for elem in logs_returns_per_episode if elem == 1.0])
+    num_incompletes = len([elem for elem in logs_returns_per_episode if elem == 0.0])
+    num_spec_fails = len([elem for elem in logs_returns_per_episode if elem == -1.0])
+
+    result_dict = {
+        "num_successes": num_successes,
+        "num_incompletes": num_incompletes,
+        "num_spec_fails": num_spec_fails
+    }
     for field, value in zip(header, data):
         print(field, value)
+        result_dict[field] = value
+
+    with open(f"results_{args.ltl_sampler}.json", "w") as wf:
+        json.dump(result_dict, wf)
