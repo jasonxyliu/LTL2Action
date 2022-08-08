@@ -172,11 +172,14 @@ if __name__ == '__main__':
     result_dict = {
         "num_successes": num_successes,
         "num_incompletes": num_incompletes,
-        "num_spec_fails": num_spec_fails
+        "num_spec_fails": num_spec_fails,
+        "eval_episodes": args.eval_episodes
     }
     for field, value in zip(header, data):
         print(field, value)
         result_dict[field] = value
+    result_dict["num_frames_per_episode"] = logs_num_frames_per_episode
+    result_dict["returns_per_episode"] = logs_returns_per_episode
 
     with open(f"results_{args.ltl_sampler}.json", "w") as wf:
         json.dump(result_dict, wf)
