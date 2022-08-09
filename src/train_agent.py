@@ -226,7 +226,7 @@ if use_mem:
 else:
     acmodel = ACModel(envs[0].env, obs_space, envs[0].action_space, args.ignoreLTL, args.gnn, args.dumb_ac, args.freeze_ltl)
 
-pdb.set_trace()
+# pdb.set_trace()
 
 if "model_state" in status:
     print("train_agent.py load_state_dict")
@@ -277,9 +277,6 @@ update = status["update"]
 start_time = time.time()
 
 while num_frames < args.frames:
-    print(f"training progress: {num_frames}/{args.frames}")
-    print(f"time took so far: {time.time() - start_time}")
-
     # Update model parameters
 
     update_start_time = time.time()
