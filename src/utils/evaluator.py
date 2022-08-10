@@ -96,7 +96,9 @@ class Eval:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--ltl-sampler", default="Default",
-                    help="the ltl formula template to sample from (default: DefaultSampler)")
+                    help="the ltl formula template to sample from for evaluation (default: DefaultSampler)")
+    parser.add_argument("--train-ltl-sampler", default="Default",
+                    help="the ltl formula template to sample from for training (default: DefaultSampler)")
     parser.add_argument("--seed", type=int, default=1,
                     help="random seed (default: 1)")
     parser.add_argument("--model-paths", required=True, nargs="+",
@@ -119,8 +121,6 @@ if __name__ == '__main__':
     parser.add_argument("--gnn", default="RGCN_8x32_ROOT_SHARED", help="use gnn to model the LTL (only if ignoreLTL==True)")
     parser.add_argument("--dumb-ac", action="store_true", default=False,help="Use a single-layer actor-critic")
     parser.add_argument("--cpu", action="store_true", default=False, help="use cpu for training.")
-
-
     args = parser.parse_args()
 
     logs_returns_per_episode = []
@@ -145,8 +145,6 @@ if __name__ == '__main__':
     return_per_episode = utils.synthesize(logs_returns_per_episode)
     num_frames_per_episode = utils.synthesize(logs_num_frames_per_episode)
 
-    # pdb.set_trace()
-
     average_discounted_return = utils.average_discounted_return(logs_returns_per_episode, logs_num_frames_per_episode, args.discount)
     # average_discounted_return, error = utils.average_discounted_return(logs_returns_per_episode, logs_num_frames_per_episode, args.discount, include_error=True)
 
@@ -158,12 +156,8 @@ if __name__ == '__main__':
     data += [average_discounted_return]
     # header += ["average_discounted_return", "err"]
     # data += [average_discounted_return, error]
-
-
     header += ["return_" + key for key in return_per_episode.keys()]
     data += return_per_episode.values()
-
-    pdb.set_trace()
 
     num_successes = len([elem for elem in logs_returns_per_episode if elem == 1.0])
     num_incompletes = len([elem for elem in logs_returns_per_episode if elem == 0.0])
@@ -181,5 +175,10 @@ if __name__ == '__main__':
     result_dict["num_frames_per_episode"] = logs_num_frames_per_episode
     result_dict["returns_per_episode"] = logs_returns_per_episode
 
-    with open(f"results_{args.ltl_sampler}.json", "w") as wf:
+    # pdb.set_trace()
+
+    train_type = args.train_ltl_type if args.dumb_ac else f"full_model_{args.train_ltl_type}" 
+    test_type = "_".join(args.ltl_sampler.split("_")[2:])
+    save_fpath = os.path.join("..", "results", f"results_{train_type}_{test_type}.json")
+    with open(save_fpath, "w") as wf:
         json.dump(result_dict, wf)
