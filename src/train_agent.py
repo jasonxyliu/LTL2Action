@@ -117,7 +117,7 @@ parser.add_argument("--int-reward", type=float, default=0.0, help="the intrinsic
 parser.add_argument("--pretrained-gnn", action="store_true", default=False, help="load a pre-trained LTL module.")
 parser.add_argument("--dumb-ac", action="store_true", default=False,help="Use a single-layer actor-critic")
 parser.add_argument("--freeze-ltl", action="store_true", default=False,help="Freeze the gradient updates of the LTL module")
-parser.add_argument("--cpu", action="store_true", default=False, help="use cpu for training.")
+parser.add_argument("--use_cpu", action="store_true", default=False, help="use cpu for training.")
 args = parser.parse_args()
 
 use_mem = args.recurrence > 1
@@ -201,7 +201,7 @@ txt_logger.info("Training status loaded.\n")
 
 if pretrained_model_dir is not None:
     try:
-        pretrained_status = utils.get_status(pretrained_model_dir, args.cpu)
+        pretrained_status = utils.get_status(pretrained_model_dir, args.use_cpu)
     except:
         txt_logger.info("Failed to load pretrained model.\n")
         exit(1)
@@ -260,7 +260,6 @@ if args.eval:
     for eval_sampler in eval_samplers:
         evals.append(utils.Eval(eval_env, model_name, eval_sampler,
                     seed=args.seed, device=device, num_procs=eval_procs, ignoreLTL=args.ignoreLTL, progression_mode=progression_mode, gnn=args.gnn, dumb_ac = args.dumb_ac))
-
 
 # Train model
 num_frames = status["num_frames"]
