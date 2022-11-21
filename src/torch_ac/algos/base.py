@@ -1,10 +1,10 @@
+import numpy as np
 from abc import ABC, abstractmethod
 import torch
 
 from torch_ac.format import default_preprocess_obss
 from torch_ac.utils import DictList, ParallelEnv
 
-import numpy as np
 
 class BaseAlgo(ABC):
     """The base class for RL algorithms."""
@@ -44,9 +44,7 @@ class BaseAlgo(ABC):
             a function that shapes the reward, takes an
             (observation, action, reward, done) tuple as an input
         """
-
         # Store parameters
-
         self.env = ParallelEnv(envs)
         self.acmodel = acmodel
         self.device = device
@@ -63,22 +61,18 @@ class BaseAlgo(ABC):
         self.action_space_shape = envs[0].action_space.shape
 
         # Control parameters
-
         assert self.acmodel.recurrent or self.recurrence == 1
         assert self.num_frames_per_proc % self.recurrence == 0
 
         # Configure acmodel
-
         self.acmodel.to(self.device)
         self.acmodel.train()
 
         # Store helpers values
-
         self.num_procs = len(envs)
         self.num_frames = self.num_frames_per_proc * self.num_procs
 
         # Initialize experience values
-
         shape = (self.num_frames_per_proc, self.num_procs)
         act_shape = shape + self.action_space_shape
 
@@ -96,7 +90,6 @@ class BaseAlgo(ABC):
         self.log_probs = torch.zeros(*act_shape, device=self.device)
 
         # Initialize log values
-
         self.log_episode_return = torch.zeros(self.num_procs, device=self.device)
         self.log_episode_reshaped_return = torch.zeros(self.num_procs, device=self.device)
         self.log_episode_num_frames = torch.zeros(self.num_procs, device=self.device)
@@ -126,10 +119,8 @@ class BaseAlgo(ABC):
             Useful stats about the training process, including the average
             reward, policy loss, value loss, etc.
         """
-
         for i in range(self.num_frames_per_proc):
             # Do one agent-environment interaction
-
             preprocessed_obs = self.preprocess_obss(self.obs, device=self.device)
             with torch.no_grad():
                 if self.acmodel.recurrent:
@@ -141,7 +132,6 @@ class BaseAlgo(ABC):
             obs, reward, done, _ = self.env.step(action.cpu().numpy())
 
             # Update experiences values
-
             self.obss[i] = self.obs
             self.obs = obs
             if self.acmodel.recurrent:
@@ -161,7 +151,6 @@ class BaseAlgo(ABC):
             self.log_probs[i] = dist.log_prob(action)
 
             # Update log values
-
             self.log_episode_return += torch.tensor(reward, device=self.device, dtype=torch.float)
             self.log_episode_reshaped_return += self.rewards[i]
             self.log_episode_num_frames += torch.ones(self.num_procs, device=self.device)
@@ -178,7 +167,6 @@ class BaseAlgo(ABC):
             self.log_episode_num_frames *= self.mask
 
         # Add advantage and return to experiences
-
         preprocessed_obs = self.preprocess_obss(self.obs, device=self.device)
         with torch.no_grad():
             if self.acmodel.recurrent:
@@ -220,11 +208,9 @@ class BaseAlgo(ABC):
         exps.log_prob = self.log_probs.transpose(0, 1).reshape((-1, ) + self.action_space_shape)
 
         # Preprocess experiences
-
         exps.obs = self.preprocess_obss(exps.obs, device=self.device)
 
         # Log some values
-
         keep = max(self.log_done_counter, self.num_procs)
 
         logs = {

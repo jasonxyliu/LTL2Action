@@ -8,7 +8,6 @@ from torch_ac.algos.base import BaseAlgo
 class PPOAlgo(BaseAlgo):
     """The Proximal Policy Optimization algorithm
     ([Schulman et al., 2015](https://arxiv.org/abs/1707.06347))."""
-
     def __init__(self, envs, acmodel, device=None, num_frames_per_proc=None, discount=0.99, lr=0.001, gae_lambda=0.95,
                  entropy_coef=0.01, value_loss_coef=0.5, max_grad_norm=0.5, recurrence=4,
                  adam_eps=1e-8, clip_eps=0.2, epochs=4, batch_size=256, preprocess_obss=None,
@@ -30,10 +29,8 @@ class PPOAlgo(BaseAlgo):
 
     def update_parameters(self, exps):
         # Collect experiences
-
         for _ in range(self.epochs):
             # Initialize log values
-
             log_entropies = []
             log_values = []
             log_policy_losses = []
@@ -42,7 +39,6 @@ class PPOAlgo(BaseAlgo):
 
             for inds in self._get_batches_starting_indexes():
                 # Initialize batch values
-
                 batch_entropy = 0
                 batch_value = 0
                 batch_policy_loss = 0
@@ -50,17 +46,14 @@ class PPOAlgo(BaseAlgo):
                 batch_loss = 0
 
                 # Initialize memory
-
                 if self.acmodel.recurrent:
                     memory = exps.memory[inds]
 
                 for i in range(self.recurrence):
                     # Create a sub-batch of experience
-
                     sb = exps[inds + i]
 
                     # Compute loss
-
                     if self.acmodel.recurrent:
                         dist, value, memory = self.acmodel(sb.obs, memory * sb.mask)
                     else:
@@ -85,7 +78,6 @@ class PPOAlgo(BaseAlgo):
                     loss = policy_loss - self.entropy_coef * entropy + self.value_loss_coef * value_loss
 
                     # Update batch values
-
                     batch_entropy += entropy.item()
                     batch_value += value.mean().item()
                     batch_policy_loss += policy_loss.item()
@@ -93,12 +85,10 @@ class PPOAlgo(BaseAlgo):
                     batch_loss += loss
 
                     # Update memories for next epoch
-
                     if self.acmodel.recurrent and i < self.recurrence - 1:
                         exps.memory[inds + i + 1] = memory.detach()
 
                 # Update batch values
-
                 batch_entropy /= self.recurrence
                 batch_value /= self.recurrence
                 batch_policy_loss /= self.recurrence
@@ -106,7 +96,6 @@ class PPOAlgo(BaseAlgo):
                 batch_loss /= self.recurrence
 
                 # Update actor-critic
-
                 self.optimizer.zero_grad()
                 batch_loss.backward()
                 grad_norm = sum(p.grad.data.norm(2).item() ** 2 for p in self.acmodel.parameters() if p.requires_grad) ** 0.5
@@ -114,7 +103,6 @@ class PPOAlgo(BaseAlgo):
                 self.optimizer.step()
 
                 # Update log values
-
                 log_entropies.append(batch_entropy)
                 log_values.append(batch_value)
                 log_policy_losses.append(batch_policy_loss)
@@ -122,7 +110,6 @@ class PPOAlgo(BaseAlgo):
                 log_grad_norms.append(grad_norm)
 
         # Log some values
-
         logs = {
             "entropy": numpy.mean(log_entropies),
             "value": numpy.mean(log_values),
@@ -146,7 +133,6 @@ class PPOAlgo(BaseAlgo):
         batches_starting_indexes : list of list of int
             the indexes of the experiences to be used at first for each batch
         """
-
         indexes = numpy.arange(0, self.num_frames, self.recurrence)
         indexes = numpy.random.permutation(indexes)
 

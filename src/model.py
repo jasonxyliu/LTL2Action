@@ -175,6 +175,3 @@ class GRUModel(nn.Module):
     def forward(self, text):
         hidden, _ = self.gru(self.word_embedding(text))
         return self.output_layer(hidden[:, -1, :])
-
-
-
