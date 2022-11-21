@@ -25,7 +25,6 @@ To run PPO without progressing the LTL formula, add the "ignoreLTLprogression" f
 To run PPO without progressing the LTL formula, but learn an LSTM policy use *--recurrence X*, where X > 1 (I think X=4 is a reasonable value)
     >>> python train_agent.py --algo ppo --env Letter-7x7-v2 --model Test --save-interval 10 --procs 4 --frames 1000000000 --ltl-sampler UntilTasks_1_3_1_2 --ignoreLTLprogression --recurrence 4
 """
-
 import sys
 import argparse
 import time
@@ -109,7 +108,7 @@ parser.add_argument("--ignoreLTL", action="store_true", default=False,
 parser.add_argument("--noLTL", action="store_true", default=False,
                     help="the environment no longer has an LTL goal. --ignoreLTL must be specified concurrently.")
 parser.add_argument("--progression-mode", default="full",
-                    help="Full: uses LTL progression; partial: shows the propositions which progress or falsify the formula; none: only original formula is seen. ")
+                    help="Full: uses LTL progression; partial: shows the propositions which progress or falsify the formula; none: only original formula is seen.")
 parser.add_argument("--recurrence", type=int, default=1,
                     help="number of time-steps gradient is backpropagated (default: 1). If > 1, a LSTM is added to the model to have memory.")
 parser.add_argument("--gnn", default="RGCN_8x32_ROOT_SHARED", help="use gnn to model the LTL (only if ignoreLTL==True)")
@@ -171,7 +170,7 @@ txt_logger.info("{}\n".format(args))
 utils.seed(args.seed)
 
 # Set device
-if args.cpu:
+if args.use_cpu:
     device = torch.device("cpu")
 else:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -194,7 +193,7 @@ txt_logger.info("Environments loaded\n")
 
 # Load training status
 try:
-    status = utils.get_status(model_dir + "/train")
+    status = utils.get_status(model_dir + "/train", args.use_cpu)
 except OSError:
     status = {"num_frames": 0, "update": 0}
 txt_logger.info("Training status loaded.\n")
@@ -213,7 +212,7 @@ if "vocab" in status and preprocess_obss.vocab is not None:
     preprocess_obss.vocab.load_vocab(status["vocab"])
 txt_logger.info("Observations preprocessor loaded.\n")
 
-# Load actor-critic model
+# Load model
 if use_mem:
     acmodel = RecurrentACModel(envs[0].env, obs_space, envs[0].action_space, args.ignoreLTL, args.gnn, args.dumb_ac, args.freeze_ltl)
 else:
