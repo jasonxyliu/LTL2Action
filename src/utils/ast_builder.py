@@ -1,18 +1,18 @@
 import ring
 import numpy as np
-
 import dgl
 import networkx as nx
 from sklearn.preprocessing import OneHotEncoder
 
 edge_types = {k:v for (v, k) in enumerate(["self", "arg", "arg1", "arg2"])}
 
-"""
-A class that can take an LTL formula and generate the Abstract Syntax Tree (AST) of it. This
-code can generate trees in either Networkx or DGL formats. And uses caching to remember recently
-generated trees.
-"""
+
 class ASTBuilder(object):
+    """
+    A class that can take an LTL formula and generate the Abstract Syntax Tree (AST) of it. This
+    code can generate trees in either Networkx or DGL formats. And uses caching to remember recently
+    generated trees.
+    """
     def __init__(self, propositions):
         super(ASTBuilder, self).__init__()
 
@@ -108,6 +108,7 @@ class ASTBuilder(object):
 
         return None
 
+
 def draw(G, formula):
     from networkx.drawing.nx_agraph import graphviz_layout
     import matplotlib.pyplot as plt
@@ -121,12 +122,13 @@ def draw(G, formula):
     nx.draw(G, pos, with_labels=True, arrows=True, labels=labels, node_shape='s', edgelist=list(nx.get_edge_attributes(G,'type')), node_size=500, node_color="white") #edge_color=edge_color
     plt.show()
 
-"""
-A simple test to check if the ASTBuilder works fine. We do a preorder DFS traversal of the resulting
-tree and convert it to a simplified formula and compare the result with the simplified version of the
-original formula. They should match.
-"""
+
 if __name__ == '__main__':
+    """
+    A simple test to check if the ASTBuilder works fine. We do a preorder DFS traversal of the resulting
+    tree and convert it to a simplified formula and compare the result with the simplified version of the
+    original formula. They should match.
+    """
     import re
     import sys
     import itertools

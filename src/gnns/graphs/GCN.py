@@ -8,6 +8,7 @@ from dgl.nn.pytorch.conv import GraphConv
 
 from gnns.graphs.GNN import GNN
 
+
 class GCN(GNN):
     def __init__(self, input_dim, output_dim, **kwargs):
         super().__init__(input_dim, output_dim)

@@ -10,6 +10,7 @@ from gnns.graphs.GNN import GNN
 
 from utils.ast_builder import edge_types
 
+
 class RGCN(GNN):
     def __init__(self, input_dim, output_dim, **kwargs):
         super().__init__(input_dim, output_dim)
@@ -63,6 +64,7 @@ class RGCNRoot(RGCN):
         hg = dgl.sum_nodes(g, 'h', weight='is_root')
         return self.g_embed(hg).squeeze(1)
 
+
 class RGCNRootShared(GNN):
     def __init__(self, input_dim, output_dim, **kwargs):
         super().__init__(input_dim, output_dim)
@@ -88,4 +90,3 @@ class RGCNRootShared(GNN):
 
         hg = dgl.sum_nodes(g, 'h', weight='is_root')
         return self.g_embed(hg).squeeze(1)
-

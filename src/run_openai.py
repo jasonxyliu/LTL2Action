@@ -20,6 +20,7 @@ from baselines.common import set_global_seeds
 import envs.gym_letters
 import ltl_wrappers
 
+
 def make_env(env_id, mpi_rank=0, subrank=0, seed=None, logger_dir=None, initializer=None):
     if initializer is not None:
         initializer(mpi_rank=mpi_rank, subrank=subrank)
@@ -36,6 +37,7 @@ def make_env(env_id, mpi_rank=0, subrank=0, seed=None, logger_dir=None, initiali
                         allow_early_resets=True)
 
     return env
+
 
 def make_vec_env(env_id, num_env, seed, start_index=0, initializer=None, force_dummy=False):
     """
@@ -60,6 +62,7 @@ def make_vec_env(env_id, num_env, seed, start_index=0, initializer=None, force_d
     else:
         return DummyVecEnv([make_thunk(i + start_index, initializer=None) for i in range(num_env)])
 
+
 def build_env(env_id, agent, force_dummy=False, num_env=None, seed=None):
     ncpu = multiprocessing.cpu_count()
     if sys.platform == 'darwin': ncpu //= 2
@@ -76,6 +79,7 @@ def build_env(env_id, agent, force_dummy=False, num_env=None, seed=None):
         #env = VecFrameStack(env, frame_stack_size)
 
     return env
+
 
 def learn_letters(agent, env):
     if agent == "dqn":
@@ -154,7 +158,6 @@ def run_agent(agent, env_id, run_id):
 
 
 if __name__ == '__main__':
-
     agent  = 'ppo'
     env_id = 'Letter-4x4-v0'
     run_id = 0

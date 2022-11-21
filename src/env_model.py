@@ -18,7 +18,6 @@ def getEnvModel(env, obs_space):
         return PendulumEnvModel(obs_space)
     # Add your EnvModel here...
 
-
     # The default case (No environment observations) - SimpleLTLEnv uses this
     return EnvModel(obs_space)
 
@@ -73,6 +72,7 @@ class LetterEnvModel(EnvModel):
 
         return super().forward(obs)
 
+
 class MinigridEnvModel(EnvModel):
     def __init__(self, obs_space):
         super().__init__(obs_space)
@@ -101,6 +101,7 @@ class MinigridEnvModel(EnvModel):
 
         return super().forward(obs)
 
+
 class ZonesEnvModel(EnvModel):
     def __init__(self, obs_space):
         super().__init__(obs_space)
@@ -123,6 +124,7 @@ class ZonesEnvModel(EnvModel):
             return self.net_(obs.image)
 
         return super().forward(obs)
+
 
 class PendulumEnvModel(EnvModel):
     def __init__(self, obs_space):

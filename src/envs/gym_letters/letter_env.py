@@ -8,13 +8,13 @@ import numpy as np
 import gym
 from gym import spaces
 
+
 class LetterEnv(gym.Env):
     """
     This environment is a grid with randomly located letters on it
     We ensure that there is a clean path to any of the letters (a path that includes no passing by any letter)
     Note that steping outside the map causes the agent to appear on the other extreme
     """
-
     def __init__(self, grid_size:int, letters:str, use_fixed_map:float, use_agent_centric_view:float, timeout:int):
         """
             grid_size:
@@ -42,7 +42,6 @@ class LetterEnv(gym.Env):
         self.agent = (0,0)
         self.locations = [(i,j) for i in range(grid_size) for j in range(grid_size) if (i,j) != (0,0)]
         self.actions = [(-1,0),(1,0),(0,-1),(0,1)]
-
 
     def step(self, action):
         """
@@ -150,7 +149,6 @@ class LetterEnv(gym.Env):
             print(line+"*")
         print("*"*(self.grid_size+2))
 
-
     def get_events(self):
         if self.agent in self.map:
             return self.map[self.agent]
@@ -158,6 +156,7 @@ class LetterEnv(gym.Env):
 
     def get_propositions(self):
         return self.letter_types
+
 
 def _is_valid_map(map, grid_size, actions):
     open_list = [(0,0)]
@@ -172,7 +171,6 @@ def _is_valid_map(map, grid_size, actions):
                 if (si,sj) not in closed_list and (si,sj) not in open_list:
                     open_list.append((si,sj))
     return len(closed_list) == grid_size*grid_size
-
 
 
 class LetterEnv4x4(LetterEnv):
@@ -199,21 +197,26 @@ class LetterEnvAgentCentric5x5(LetterEnv):
     def __init__(self):
         super().__init__(grid_size=5, letters="aabbccddee", use_fixed_map=False, use_agent_centric_view=True, timeout=50)
 
+
 class LetterEnvShortAgentCentric5x5(LetterEnv):
     def __init__(self):
         super().__init__(grid_size=5, letters="aabbccddee", use_fixed_map=False, use_agent_centric_view=True, timeout=20)
+
 
 class LetterEnvAgentCentricFixedMap5x5(LetterEnv):
     def __init__(self):
         super().__init__(grid_size=5, letters="aabbccddee", use_fixed_map=True, use_agent_centric_view=True, timeout=50)
 
+
 class LetterEnvShortAgentCentricFixedMap5x5(LetterEnv):
     def __init__(self):
         super().__init__(grid_size=5, letters="aabbccddee", use_fixed_map=True, use_agent_centric_view=True, timeout=20)
 
+
 class LetterEnv7x7(LetterEnv):
     def __init__(self):
         super().__init__(grid_size=7, letters="aabbccddeeffgghhiijjkkll", use_fixed_map=False, use_agent_centric_view=False, timeout=75)
+
 
 class LetterEnvFixedMap7x7(LetterEnv):
     def __init__(self):
@@ -224,10 +227,10 @@ class LetterEnvAgentCentric7x7(LetterEnv):
     def __init__(self):
         super().__init__(grid_size=7, letters="aabbccddeeffgghhiijjkkll", use_fixed_map=False, use_agent_centric_view=True, timeout=75)
 
+
 class LetterEnvAgentCentricFixedMap7x7(LetterEnv):
     def __init__(self):
         super().__init__(grid_size=7, letters="aabbccddeeffgghhiijjkkll", use_fixed_map=True, use_agent_centric_view=True, timeout=75)
-
 
 
 # This code allow to play a game (for debugging purposes)

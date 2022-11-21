@@ -9,11 +9,11 @@ import gym
 from gym import spaces
 from envs.minigrid.adversarial import *
 
+
 class MinigridEnv(gym.Env):
     """
     A simple wrapper for a gym-minigrid environment. This implements propositions on top of the minigrid. 
     """
-
     def __init__(self, env, letters, timeout = 100):
         """
             ## env is the wrapped MiniGrid environment
@@ -53,10 +53,11 @@ class MinigridEnv(gym.Env):
     def get_propositions(self):
         return self.letter_types
 
+
 class AdversarialMinigridEnv(MinigridEnv):
     def __init__(self):
         super().__init__(AdversarialEnv9x9(), 'abc', 1000)
 
+
 if __name__ == '__main__':
     AdversarialMinigridEnv()
-

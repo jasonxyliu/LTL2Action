@@ -1,5 +1,4 @@
 ## Training RL agents
-
 Training is done via `train_agent.py`, where you can specify the environment, the set of tasks to be performed, the encoding method for the LTL instructions, PPO hyperparameters, etc. See the beginning of `train_agent.py` for more details on all the arguments.
 
 **To use pretrained LTL modules**, add the option `--pretrained-gnn`. It will automatically search `src/symbol-storage` for a compatible LTL module. You must first train a good policy (on any environment -- use LTLBootcamp for fast training) and save the model (done automatically). The default storage location for saved models is `src/storage` and you need to manually `cp -r` the model directory to `src/symbol-storage`. 
@@ -41,9 +40,7 @@ GRU+progression (Avoidance Tasks): `train_agent.py --algo ppo --env Simple-LTL-E
 
 GRU+progression (Partially-Ordered Tasks): `train_agent.py --algo ppo --env Simple-LTL-Env-v0 --log-interval 1 --save-interval 30 --frames-per-proc 512 --batch-size 1024 --frames 10000000 --dumb-ac --discount 0.9 --ltl-sampler Eventually_1_5_1_4 --lr 0.003 --gnn GRU --epochs 4`
 
-    
 ## Evaluating trained agents
-
 If you have a trained model for the ZoneEnv, you can use this command to run and visualize it. It automatically loads the same tasks as it was trained on. 
 
 `python3 test_safety.py viz zone-random-agent/ Zones-5-v0`

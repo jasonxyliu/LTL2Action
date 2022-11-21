@@ -2,7 +2,6 @@
 These functions preprocess the observations.
 When trying more sophisticated encoding for LTL, we might have to modify this code.
 """
-
 import os
 import json
 import re
@@ -15,12 +14,13 @@ import utils
 from envs import *
 from ltl_wrappers import LTLEnv
 
+
 def get_obss_preprocessor(env, gnn, progression_mode):
     obs_space = env.observation_space
     vocab_space = env.get_propositions()
     vocab = None
 
-    if isinstance(env, LTLEnv): #LTLEnv Wrapped env
+    if isinstance(env, LTLEnv):  # LTLEnv Wrapped env
         env = env.unwrapped
         # if isinstance(env, LetterEnv) or isinstance(env, MinigridEnv) or isinstance(env, ZonesEnv):
         if isinstance(env, LetterEnv) or isinstance(env, MinigridEnv):
@@ -31,7 +31,6 @@ def get_obss_preprocessor(env, gnn, progression_mode):
                         "image": preprocess_images([obs["features"] for obs in obss], device=device),
                         "progress_info":  torch.stack([torch.tensor(obs["progress_info"], dtype=torch.float) for obs in obss], dim=0).to(device)
                     })
-
             else:
                 obs_space = {"image": obs_space.spaces["features"].shape, "text": max(22, len(vocab_space) + 10)}
                 vocab_space = {"max_size": obs_space["text"], "tokens": vocab_space}
@@ -69,8 +68,8 @@ def get_obss_preprocessor(env, gnn, progression_mode):
 
         else:
             raise ValueError("Unknown observation space: " + str(obs_space))
-    # Check if obs_space is an image space
-    elif isinstance(obs_space, gym.spaces.Box):
+
+    elif isinstance(obs_space, gym.spaces.Box):  # check if obs_space is an image space
         obs_space = {"image": obs_space.shape}
 
         def preprocess_obss(obss, device=None):
@@ -104,7 +103,7 @@ def preprocess4rnn(texts, vocab, device=None):
     max_text_len = 0
 
     for text in texts:
-        text = str(text) # transforming the ltl formula into a string
+        text = str(text)  # transforming the ltl formula into a string
         tokens = re.findall("([a-z]+)", text.lower())
         var_indexed_text = np.array([vocab[token] for token in tokens])
         var_indexed_texts.append(var_indexed_text)
@@ -116,6 +115,7 @@ def preprocess4rnn(texts, vocab, device=None):
         indexed_texts[i, :len(indexed_text)] = indexed_text
 
     return torch.tensor(indexed_texts, device=device, dtype=torch.long)
+
 
 def preprocess4gnn(texts, ast, device=None):
     """
