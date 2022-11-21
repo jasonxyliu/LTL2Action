@@ -4,6 +4,7 @@ import torch.nn.functional as F
 
 from torch_ac.algos.base import BaseAlgo
 
+
 class PPOAlgo(BaseAlgo):
     """The Proximal Policy Optimization algorithm
     ([Schulman et al., 2015](https://arxiv.org/abs/1707.06347))."""

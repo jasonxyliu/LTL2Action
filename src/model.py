@@ -8,7 +8,6 @@ The features and LTL are preprocessed by utils.format.get_obss_preprocessor(...)
 Each of those tokens get a one-hot embedding representation by the utils.format.Vocabulary class.
 """
 
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -22,6 +21,7 @@ from gnns.graphs.GNN import GNNMaker
 
 from env_model import getEnvModel
 from policy_network import PolicyNetwork
+
 
 # Function from https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/blob/master/model.py
 def init_params(m):

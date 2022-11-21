@@ -26,16 +26,16 @@ To run PPO without progressing the LTL formula, but learn an LSTM policy use *--
     >>> python train_agent.py --algo ppo --env Letter-7x7-v2 --model Test --save-interval 10 --procs 4 --frames 1000000000 --ltl-sampler UntilTasks_1_3_1_2 --ignoreLTLprogression --recurrence 4
 """
 
+import sys
 import argparse
 import time
 import datetime
-import torch
-import torch_ac
-import tensorboardX
-import sys
 import glob
 from math import floor
 import pdb
+import torch
+import torch_ac
+import tensorboardX
 
 import utils
 from model import ACModel
@@ -118,13 +118,11 @@ parser.add_argument("--pretrained-gnn", action="store_true", default=False, help
 parser.add_argument("--dumb-ac", action="store_true", default=False,help="Use a single-layer actor-critic")
 parser.add_argument("--freeze-ltl", action="store_true", default=False,help="Freeze the gradient updates of the LTL module")
 parser.add_argument("--cpu", action="store_true", default=False, help="use cpu for training.")
-
 args = parser.parse_args()
 
 use_mem = args.recurrence > 1
 
 # Set run dir
-
 date = datetime.datetime.now().strftime("%y-%m-%d-%H-%M-%S")
 
 gnn_name = args.gnn
@@ -158,24 +156,21 @@ if args.pretrained_gnn:
         raise Exception("More than 1 candidate pretraining directory found.")
 
     pretrained_model_dir = model_dirs[0]
-# Load loggers and Tensorboard writer
 
+# Load loggers and Tensorboard writer
 txt_logger = utils.get_txt_logger(model_dir + "/train")
 csv_file, csv_logger = utils.get_csv_logger(model_dir + "/train")
 tb_writer = tensorboardX.SummaryWriter(model_dir + "/train")
 utils.save_config(model_dir + "/train", args)
 
 # Log command and all script arguments
-
 txt_logger.info("{}\n".format(" ".join(sys.argv)))
 txt_logger.info("{}\n".format(args))
 
 # Set seed for all randomness sources
-
 utils.seed(args.seed)
 
 # Set device
-
 if args.cpu:
     device = torch.device("cpu")
 else:
@@ -183,7 +178,6 @@ else:
 txt_logger.info(f"Device: {device}\n")
 
 # Load environments
-
 envs = []
 progression_mode = args.progression_mode
 for i in range(args.procs):
@@ -199,7 +193,6 @@ if isinstance(envs[0].env, LetterEnv):
 txt_logger.info("Environments loaded\n")
 
 # Load training status
-
 try:
     status = utils.get_status(model_dir + "/train")
 except OSError:
@@ -208,7 +201,7 @@ txt_logger.info("Training status loaded.\n")
 
 if pretrained_model_dir is not None:
     try:
-        pretrained_status = utils.get_status(pretrained_model_dir)
+        pretrained_status = utils.get_status(pretrained_model_dir, args.cpu)
     except:
         txt_logger.info("Failed to load pretrained model.\n")
         exit(1)
@@ -220,7 +213,7 @@ if "vocab" in status and preprocess_obss.vocab is not None:
     preprocess_obss.vocab.load_vocab(status["vocab"])
 txt_logger.info("Observations preprocessor loaded.\n")
 
-# Load model
+# Load actor-critic model
 if use_mem:
     acmodel = RecurrentACModel(envs[0].env, obs_space, envs[0].action_space, args.ignoreLTL, args.gnn, args.dumb_ac, args.freeze_ltl)
 else:
@@ -232,7 +225,6 @@ if "model_state" in status:
     print("train_agent.py load_state_dict")
     acmodel.load_state_dict(status["model_state"])
     txt_logger.info("Loading model from existing run.\n")
-
 elif args.pretrained_gnn:
     acmodel.load_pretrained_gnn(pretrained_status["model_state"])
     txt_logger.info("Pretrained model loaded.\n")
@@ -258,7 +250,7 @@ if "optimizer_state" in status:
     txt_logger.info("Loading optimizer from existing run.\n")
 txt_logger.info("Optimizer loaded.\n")
 
-# init the evaluator
+# Initialize evaluator
 if args.eval:
     eval_samplers = args.ltl_samplers_eval if args.ltl_samplers_eval else [args.ltl_sampler]
     eval_env = args.eval_env if args.eval_env else args.env
@@ -271,14 +263,12 @@ if args.eval:
 
 
 # Train model
-
 num_frames = status["num_frames"]
 update = status["update"]
 start_time = time.time()
 
 while num_frames < args.frames:
     # Update model parameters
-
     update_start_time = time.time()
     exps, logs1 = algo.collect_experiences()
     logs2 = algo.update_parameters(exps)
@@ -289,7 +279,6 @@ while num_frames < args.frames:
     update += 1
 
     # Print logs
-
     if update % args.log_interval == 0:
         fps = logs["num_frames"]/(update_end_time - update_start_time)
         duration = int(time.time() - start_time)
@@ -327,7 +316,6 @@ while num_frames < args.frames:
             tb_writer.add_scalar(field, value, num_frames)
 
     # Save status
-
     if args.save_interval > 0 and update % args.save_interval == 0:
         status = {"num_frames": num_frames, "update": update,
                   "model_state": algo.acmodel.state_dict(), "optimizer_state": algo.optimizer.state_dict()}

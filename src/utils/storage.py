@@ -28,7 +28,7 @@ def get_status_path(model_dir):
     return os.path.join(model_dir, "status.pt")
 
 
-def get_status(model_dir, use_cpu=True):
+def get_status(model_dir, use_cpu):
     path = get_status_path(model_dir)
     if use_cpu:
         return torch.load(path, map_location=torch.device("cpu"))
@@ -45,7 +45,7 @@ def get_vocab(model_dir):
     return get_status(model_dir)["vocab"]
 
 
-def get_model_state(model_dir, use_cpu=True):
+def get_model_state(model_dir, use_cpu):
     return get_status(model_dir, use_cpu)["model_state"]
 
 
