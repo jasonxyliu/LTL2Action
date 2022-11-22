@@ -11,7 +11,8 @@ In the **animation** below, our agent's behaviour, compared to a myopic one is d
 
 ## New Installation instructions
 1. Create conda environment (only works for Python 3.6 or 3.7)
-    - `conda create -n ltl2action python=3.6`
+    - `conda create -n ltl2action python=3.7`
+    - `conda activate ltl2action`
 2. Install LTL2Action
     - `git clone git@github.com:jasonxyliu/LTL2Action.git`
     - `cd LTL2Action`
