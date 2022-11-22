@@ -3,14 +3,12 @@ import numpy as np
 import gym
 from gym import spaces
 
-class SimpleLTLEnv(gym.Env):
 
+class SimpleLTLEnv(gym.Env):
     def __init__(self, letters:str, timeout:int):
         """
-            letters:
-                - (str) propositions
-            timeout:
-                - (int) maximum lenght of the episode
+        letters: (str) propositions
+        timeout: (int) maximum lenght of the episode
         """
         self.letters      = letters
         self.letter_types = list(set(letters))
@@ -55,6 +53,7 @@ class SimpleLTLEnv(gym.Env):
 
     def get_propositions(self):
         return self.letter_types
+
 
 class SimpleLTLEnvDefault(SimpleLTLEnv):
     def __init__(self):

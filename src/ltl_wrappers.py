@@ -13,13 +13,12 @@ Notes about LTLEnv:
     - If the LTL goal becomes False, then an extra -1 reward is given to the agent.
     - Otherwise, the agent gets the same reward given by the original environment.
 """
-
-
 import numpy as np
 import gym
 from gym import spaces
 import ltl_progression, random
 from ltl_samplers import getLTLSampler, SequenceSampler
+
 
 class LTLEnv(gym.Wrapper):
     def __init__(self, env, progression_mode="full", ltl_sampler=None, intrinsic=0.0):
@@ -31,7 +30,7 @@ class LTLEnv(gym.Wrapper):
               specifying the LTL objective
             - It also automatically progress the formula and generates an
               appropriate reward function
-            - However, it does requires the user to define a labeling function
+            - However, it does require the user to define a labeling function
               and a set of training formulas
         progression_mode:
             - "full": the agent gets the full, progressed LTL formula as part of the observation
@@ -46,7 +45,6 @@ class LTLEnv(gym.Wrapper):
         self.observation_space = spaces.Dict({'features': env.observation_space})
         self.known_progressions = {}
         self.intrinsic = intrinsic
-
 
     def sample_ltl_goal(self):
         # This function must return an LTL formula for the task
@@ -78,7 +76,6 @@ class LTLEnv(gym.Wrapper):
         else:
             ltl_obs = {'features': self.obs,'text': self.ltl_goal}
         return ltl_obs
-
 
     def step(self, action):
         int_reward = 0
@@ -124,7 +121,6 @@ class LTLEnv(gym.Wrapper):
 
         return self.known_progressions[(ltl_formula, truth_assignment)]
 
-
     # # X is a vector where index i is 1 if prop i progresses the formula, -1 if it falsifies it, 0 otherwise.
     def progress_info(self, ltl_formula):
         propositions = self.env.get_propositions()
@@ -154,7 +150,6 @@ class LTLEnv(gym.Wrapper):
             self.env.timeout = 25 # 10 * length
 
         return formula
-
 
     def get_events(self, obs, act, next_obs):
         # This function must return the events that currently hold on the environment

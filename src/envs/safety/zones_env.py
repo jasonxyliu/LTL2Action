@@ -4,6 +4,9 @@ import gym
 
 from safety_gym.envs.engine import Engine
 
+GROUP_ZONE = 7
+
+
 class zone(enum.Enum):
     JetBlack = 0
     White    = 1
@@ -23,7 +26,6 @@ class zone(enum.Enum):
     def __repr__(self):
         return self.name
 
-GROUP_ZONE = 7
 
 class ZonesEnv(Engine):
     """
@@ -137,7 +139,6 @@ class ZonesEnv(Engine):
 
         return obs
 
-
     def render_lidars(self):
         offset = super().render_lidars()
 
@@ -170,12 +171,13 @@ class LTLZonesEnv(ZonesEnv):
             if h_dist <= self.zones_size:
                 # We assume the agent to be in one zone at a time
                 events += str(self.zones[h_inedx])
-
         return events
+
 
 class ZonesEnv1(LTLZonesEnv):
     def __init__(self):
         super().__init__(zones=[zone.Red], use_fixed_map=False, timeout=1000)
+
 
 class ZonesEnv1Fixed(LTLZonesEnv):
     def __init__(self):
@@ -184,9 +186,11 @@ class ZonesEnv1Fixed(LTLZonesEnv):
         }
         super().__init__(zones=[zone.Red], use_fixed_map=True, timeout=1000, config=config)
 
+
 class ZonesEnv5(LTLZonesEnv):
     def __init__(self):
         super().__init__(zones=[zone.JetBlack, zone.JetBlack, zone.Red, zone.Red, zone.White, zone.White,  zone.Yellow, zone.Yellow], use_fixed_map=False, timeout=1000)
+
 
 class ZonesEnv5Fixed(LTLZonesEnv):
     def __init__(self):

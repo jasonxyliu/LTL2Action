@@ -1,9 +1,9 @@
-import csv
 import os
-import torch
-import logging
 import sys
+import logging
+import csv
 import pickle
+import torch
 
 import utils
 
@@ -78,6 +78,7 @@ def load_config(model_dir):
         print(f"No config file found at: {path}")
 
     return pickle.load(open(path, "rb"))
+
 
 def save_config(model_dir, config):
     path = os.path.join(model_dir, "config.pickle")

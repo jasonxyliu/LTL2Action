@@ -1,7 +1,3 @@
-import gym
-import glfw
-from mujoco_py import MjViewer, const
-
 """
 A simple wrapper for SafetyGym envs. It uses the PlayViewer that listens to key_pressed events
 and passes the id of the pressed key as part of the observation to the agent.
@@ -9,14 +5,21 @@ and passes the id of the pressed key as part of the observation to the agent.
 
 Should NOT be used for training!
 """
+import gym
+import glfw
+from mujoco_py import MjViewer, const
+
+
 class Play(gym.Wrapper):
     def __init__(self, env):
         super().__init__(env)
         self.env = env
         self.key_pressed = None
 
-    # Shows a text on the upper right corner of the screen (currently used to display the LTL formula)
     def show_text(self, text):
+        """
+        Shows a text on the upper right corner of the screen (currently used to display the LTL formula)
+        """
         self.env.viewer.show_text(text)
 
     def show_prog_info(self, info):
@@ -46,17 +49,14 @@ class Play(gym.Wrapper):
     def wrap_obs(self, obs):
         if not self.env.viewer is None:
             self.key_pressed = self.env.viewer.consume_key()
-
         return obs
 
     def reset(self):
         obs = self.env.reset()
-
         return self.wrap_obs(obs)
 
     def step(self, action):
         next_obs, original_reward, env_done, info = self.env.step(action)
-
         return self.wrap_obs(next_obs), original_reward, env_done, info
 
 
@@ -75,7 +75,6 @@ class PlayViewer(MjViewer):
     def consume_key(self):
         ret = self.key_pressed
         self.key_pressed = None
-
         return ret
 
     def key_callback(self, window, key, scancode, action, mods):
@@ -91,7 +90,6 @@ class PlayViewer(MjViewer):
         if (self.prog_info):
             self.add_overlay(const.GRID_TOPRIGHT, "Progress", str(self.prog_info["good"]))
             self.add_overlay(const.GRID_TOPRIGHT, "Falsify", str(self.prog_info["bad"]))
-
 
         step = round(self.sim.data.time / self.sim.model.opt.timestep)
         self.add_overlay(const.GRID_BOTTOMRIGHT, "Step", str(step))
