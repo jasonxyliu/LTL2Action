@@ -8,6 +8,8 @@
 #SBATCH -e sbatch_out/arrayjob-%A-%a.err
 #SBATCH -o sbatch_out/arrayjob-%A-%a.out
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/xliu53/anaconda/ltl2action/lib
+
 module load anaconda/2022.05
 source /gpfs/runtime/opt/anaconda/2022.05/etc/profile.d/conda.sh
 conda activate ltl2action
