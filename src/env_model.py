@@ -22,18 +22,18 @@ def getEnvModel(env, obs_space):
     return EnvModel(obs_space)
 
 
-"""
-This class is in charge of embedding the environment part of the observations.
-Every environment has its own set of observations ('image', 'direction', etc) which is handeled
-here by associated EnvModel subclass.
-
-How to subclass this:
-    1. Call the super().__init__() from your init
-    2. In your __init__ after building the compute graph set the self.embedding_size appropriately
-    3. In your forward() method call the super().forward as the default case.
-    4. Add the if statement in the getEnvModel() method
-"""
 class EnvModel(nn.Module):
+    """
+    This class is in charge of embedding the environment part of the observations.
+    Every environment has its own set of observations ('image', 'direction', etc) which is handeled
+    here by associated EnvModel subclass.
+
+    How to subclass this:
+        1. Call the super().__init__() from your init
+        2. In your __init__ after building the compute graph set the self.embedding_size appropriately
+        3. In your forward() method call the super().forward as the default case.
+        4. Add the if statement in the getEnvModel() method
+    """
     def __init__(self, obs_space):
         super().__init__()
         self.embedding_size = 0
