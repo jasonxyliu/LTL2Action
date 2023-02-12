@@ -13,15 +13,7 @@ Some notes about the format:
     - Propositions are assume to be one char.
     - Negations are always followed by a proposition.
     - true and false are encoded as "True" and "False"
-"""
-
-
-from sympy import *
-from sympy.logic import simplify_logic
-from sympy.logic.boolalg import And, Or, Not
-import time, collections, spot
-
-"""
+    
 This module contains functions to progress co-safe LTL formulas such as:
     (
         'and',
@@ -29,11 +21,18 @@ This module contains functions to progress co-safe LTL formulas such as:
         ('until','True', ('and', 'a', ('until','True', ('and', 'b', ('until','True','c')))))
     )
 """
+import time
+import collections
+import spot
+from sympy import *
+from sympy.logic import simplify_logic
+from sympy.logic.boolalg import And, Or, Not
 
 
 def _is_prop_formula(f):
     # returns True if the formula does not contains temporal operators
     return 'next' not in str(f) and 'until' not in str(f)
+
 
 def _subsume_until(f1, f2):
     if str(f1) not in str(f2):
@@ -53,6 +52,7 @@ def _subsume_until(f1, f2):
         else:
             return False
     return False
+
 
 def _subsume_or(f1, f2):
     if str(f1) not in str(f2):
@@ -101,8 +101,8 @@ def _get_spot_format(ltl_std):
     ltl_spot = ltl_spot.replace("'next'","X").replace("'eventually'","F").replace("'always'","G").replace("'True'","t").replace("'False'","f").replace("\'","\"")
     return ltl_spot
 
-def _get_std_format(ltl_spot):
 
+def _get_std_format(ltl_spot):
     s = ltl_spot[0]
     r = ltl_spot[1:]
 
@@ -132,6 +132,7 @@ def _get_std_format(ltl_spot):
         return s.replace('"',''), r
 
     assert False, "Format error in spot2std"
+
 
 def progress(ltl_formula, truth_assignment):
     if type(ltl_formula) == str:
