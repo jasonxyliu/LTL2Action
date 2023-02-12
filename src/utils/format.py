@@ -91,7 +91,6 @@ def preprocess_images(images, device=None):
 def preprocess_texts(texts, vocab, vocab_space, gnn=False, device=None, **kwargs):
     if (gnn):
         return preprocess4gnn(texts, kwargs["ast"], device)
-
     return preprocess4rnn(texts, vocab, device)
 
 
@@ -127,7 +126,6 @@ def preprocess4gnn(texts, ast, device=None):
 class Vocabulary:
     """A mapping from tokens to ids with a capacity of `max_size` words.
     It can be saved in a `vocab.json` file."""
-
     def __init__(self, vocab_space):
         self.max_size = vocab_space["max_size"]
         self.vocab = {}

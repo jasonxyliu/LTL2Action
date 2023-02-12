@@ -188,7 +188,6 @@ if isinstance(envs[0].env, LetterEnv):
     txt_logger.info("Using fixed maps.")
     for env in envs:
         env.env.map = envs[0].env.map
-
 txt_logger.info("Environments loaded\n")
 
 # Load training status
