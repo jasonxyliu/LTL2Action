@@ -190,7 +190,7 @@ class EventuallySampler(LTLSampler):
 
         for i in range(conjs):
             task = self.sample_sequence()
-            ltl = task if ltl is None else ltl = ('and',task,ltl)
+            ltl = task if ltl is None else ('and',task,ltl)
         return ltl
 
     def sample_sequence(self):
