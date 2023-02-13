@@ -71,7 +71,6 @@ def get_obss_preprocessor(env, gnn, progression_mode):
 
     elif isinstance(obs_space, gym.spaces.Box):  # check if obs_space is an image space
         obs_space = {"image": obs_space.shape}
-
         def preprocess_obss(obss, device=None):
             return torch_ac.DictList({
                 "image": preprocess_images(obss, device=device)
