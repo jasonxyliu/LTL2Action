@@ -61,7 +61,7 @@ parser.add_argument("--log-interval", type=int, default=10,
 parser.add_argument("--save-interval", type=int, default=100,
                     help="number of updates between two saves (default: 10, 0 means no saving)")
 parser.add_argument("--procs", type=int, default=16,
-                    help="number of processes (default: 16)")
+                    help="number of processes/envs to train agent in parallel (default: 16)")
 parser.add_argument("--frames", type=int, default=2*10**8,
                     help="number of frames of training (default: 2*10e8)")
 parser.add_argument("--checkpoint-dir", default=None)

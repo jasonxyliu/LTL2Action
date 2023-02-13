@@ -183,8 +183,7 @@ class BaseAlgo(ABC):
             self.advantages[i] = delta + self.discount * self.gae_lambda * next_advantage * next_mask
 
         # Define experiences:
-        #   the whole experience is the concatenation of the experience
-        #   of each process.
+        #   the whole experience is the concatenation of the experience of each process.
         # In comments below:
         #   - T is self.num_frames_per_proc,
         #   - P is self.num_procs,

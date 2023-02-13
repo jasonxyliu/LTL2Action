@@ -114,7 +114,6 @@ class LTLEnv(gym.Wrapper):
         return ltl_obs, reward, done, info
 
     def progression(self, ltl_formula, truth_assignment):
-
         if (ltl_formula, truth_assignment) not in self.known_progressions:
             result_ltl = ltl_progression.progress_and_clean(ltl_formula, truth_assignment)
             self.known_progressions[(ltl_formula, truth_assignment)] = result_ltl
