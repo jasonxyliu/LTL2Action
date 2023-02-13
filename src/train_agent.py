@@ -204,7 +204,7 @@ if pretrained_model_dir is not None:
         txt_logger.info("Failed to load pretrained model.\n")
         exit(1)
 
-# Load observations preprocessor
+# Load observations preprocessor/featurizer
 using_gnn = (args.gnn != "GRU" and args.gnn != "LSTM")
 obs_space, preprocess_obss = utils.get_obss_preprocessor(envs[0], using_gnn, progression_mode)
 if "vocab" in status and preprocess_obss.vocab is not None:
