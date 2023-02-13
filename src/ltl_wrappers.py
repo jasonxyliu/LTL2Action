@@ -56,9 +56,9 @@ class LTLEnv(gym.Wrapper):
 
         # Add the ltl goal to the observation
         if self.progression_mode == "partial":
-            ltl_obs = {'features': self.obs,'progress_info': self.progress_info(self.ltl_goal)}
+            ltl_obs = {'features': self.obs, 'progress_info': self.progress_info(self.ltl_goal)}
         else:
-            ltl_obs = {'features': self.obs,'text': self.ltl_goal}
+            ltl_obs = {'features': self.obs, 'text': self.ltl_goal}
         return ltl_obs
 
     def step(self, action):
@@ -85,9 +85,9 @@ class LTLEnv(gym.Wrapper):
 
         # Compute the new observation and returning the outcome of this action
         if self.progression_mode == "full":
-            ltl_obs = {'features': self.obs,'text': self.ltl_goal}
+            ltl_obs = {'features': self.obs, 'text': self.ltl_goal}
         elif self.progression_mode == "none":
-            ltl_obs = {'features': self.obs,'text': self.ltl_original}
+            ltl_obs = {'features': self.obs, 'text': self.ltl_original}
         elif self.progression_mode == "partial":
             ltl_obs = {'features': self.obs, 'progress_info': self.progress_info(self.ltl_goal)}
         else:
@@ -103,8 +103,8 @@ class LTLEnv(gym.Wrapper):
         Format:
         (
            'and',
-           ('until','True', ('and', 'd', ('until','True',('not','c')))),
-           ('until','True', ('and', 'a', ('until','True', ('and', 'b', ('until','True','c')))))
+           ('until', 'True', ('and', 'd', ('until', 'True',('not', 'c')))),
+           ('until', 'True', ('and', 'a', ('until', 'True', ('and', 'b', ('until', 'True', 'c')))))
         )
         NOTE: The propositions must be represented by a char
         """
