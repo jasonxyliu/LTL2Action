@@ -52,9 +52,9 @@ class TransferSampler():
         self.formulas = formulas[0:size]
 
     def sample(self):
-        ret_formula = random.choice(self.formulas)
-        # print(ret_formula)
-        return ret_formula
+        formula = random.choice(self.formulas)
+        # print(formula)
+        return formula
 
 
 class LTLSampler():

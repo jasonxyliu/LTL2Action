@@ -47,6 +47,31 @@ class LTLEnv(gym.Wrapper):
         self.intrinsic = intrinsic
 
     def sample_ltl_goal(self):
+        """
+        This function must return an LTL formula for the task
+        Format:
+        (
+           'and',
+           ('until','True', ('and', 'd', ('until','True',('not','c')))),
+           ('until','True', ('and', 'a', ('until','True', ('and', 'b', ('until','True','c')))))
+        )
+        NOTE: The propositions must be represented by a char
+        """
+        formula = self.sampler.sample()
+
+        if isinstance(self.sampler, SequenceSampler):
+            def flatten(bla):
+                output = []
+                for item in bla:
+                    output += flatten(item) if isinstance(item, tuple) else [item]
+                return output
+
+            length = flatten(formula).count("and") + 1
+            self.env.timeout = 25 # 10 * length
+
+        return formula
+
+    def sample_ltl_goal(self):
         # This function must return an LTL formula for the task
         # Format:
         #(
@@ -132,23 +157,6 @@ class LTLEnv(gym.Wrapper):
             elif progress_i != ltl_formula:
                 X[i] = 1.
         return X
-
-    def sample_ltl_goal(self):
-        # NOTE: The propositions must be represented by a char
-        # This function must return an LTL formula for the task
-        formula = self.sampler.sample()
-
-        if isinstance(self.sampler, SequenceSampler):
-            def flatten(bla):
-                output = []
-                for item in bla:
-                    output += flatten(item) if isinstance(item, tuple) else [item]
-                return output
-
-            length = flatten(formula).count("and") + 1
-            self.env.timeout = 25 # 10 * length
-
-        return formula
 
     def get_events(self, obs, act, next_obs):
         # This function must return the events that currently hold on the environment
